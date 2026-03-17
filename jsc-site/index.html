@@ -330,11 +330,13 @@ let hrSort={k:'brand',d:1};
 
 // Calls go through Netlify Function proxy at /.netlify/functions/claude
 async function callAI(body){
-  const resp=await fetch('/.netlify/functions/claude',{
-    method:'POST',headers:{'Content-Type':'application/json'},
+  const url='https://corsproxy.io/?url=https://api.anthropic.com/v1/messages';
+  const resp=await fetch(url,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01'},
     body:JSON.stringify(body)
   });
-  if(!resp.ok){const e=await resp.json().catch(()=>({error:'Błąd serwera'}));throw new Error(e.error||'Błąd serwera');}
+  if(!resp.ok){const e=await resp.json().catch(()=>({error:'Błąd: '+resp.status}));throw new Error(e.error||'Błąd: '+resp.status);}
   return resp.json();
 }
 
