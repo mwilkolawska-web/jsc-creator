@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSC Creator — The Company / BNI Polska</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0f0e0d;--paper:#faf8f4;--cream:#f2ede4;--accent:#c8391a;--al:#f5e8e4;--gold:#b8860b;--muted:#8a8278;--border:#e0d9ce;--ok:#2d7a4f;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;font-size:14px;line-height:1.6;}
+/* Header */
+.hdr{background:var(--ink);color:var(--paper);padding:13px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo{font-family:'DM Serif Display',serif;font-size:17px;}.logo b{color:var(--accent);}
+.hsub{font-size:10px;color:#a09890;letter-spacing:.08em;text-transform:uppercase;margin-top:1px;}
+.hrbtn{font-size:11px;background:0;border:1px solid #444;color:#888;padding:5px 12px;border-radius:3px;cursor:pointer;letter-spacing:.05em;text-transform:uppercase;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.hrbtn:hover{border-color:var(--accent);color:var(--accent);}
+/* Steps */
+.sbar{display:flex;align-items:center;padding:0 28px;background:var(--cream);border-bottom:1px solid var(--border);}
+.si{display:flex;align-items:center;gap:7px;padding:11px 18px 11px 0;font-size:11px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;font-weight:500;position:relative;}
+.si::after{content:'›';position:absolute;right:3px;color:var(--border);}
+.si:last-child::after{display:none;}
+.si.on{color:var(--accent);}.si.done{color:var(--ok);}
+.sn{width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:var(--border);color:var(--muted);flex-shrink:0;}
+.si.on .sn{background:var(--accent);color:#fff;}.si.done .sn{background:var(--ok);color:#fff;}
+/* Layout */
+.main{max-width:800px;margin:0 auto;padding:32px 20px;}
+.card{background:#fff;border:1px solid var(--border);border-radius:6px;padding:28px;margin-bottom:18px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.ctitle{font-family:'DM Serif Display',serif;font-size:21px;margin-bottom:5px;}
+.csub{font-size:13px;color:var(--muted);margin-bottom:24px;}
+.field{margin-bottom:18px;}
+.flbl{display:block;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+input[type=text],select{width:100%;padding:9px 13px;border:1px solid var(--border);border-radius:4px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:#fff;outline:none;transition:border-color .2s;}
+input[type=text]:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,57,26,.07);}
+/* Buttons */
+.btn{padding:10px 22px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;border-radius:4px;cursor:pointer;transition:all .2s;border:none;display:inline-flex;align-items:center;gap:6px;}
+.btn-p{background:var(--accent);color:#fff;}.btn-p:hover{background:#a82d14;transform:translateY(-1px);}
+.btn-p:disabled{background:#ccc;cursor:not-allowed;transform:none;}
+.btn-s{background:#fff;color:var(--ink);border:1px solid var(--border);}.btn-s:hover{border-color:var(--ink);background:var(--cream);}
+.btn-sm{padding:5px 11px;font-size:11px;}
+/* Autocomplete */
+.acw{position:relative;}
+.acd{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 4px 4px;max-height:260px;overflow-y:auto;z-index:300;box-shadow:0 6px 20px rgba(0,0,0,.1);display:none;}
+.acd.open{display:block;}
+.acg{padding:5px 13px 2px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:var(--cream);border-bottom:1px solid var(--border);}
+.aci{padding:9px 13px;cursor:pointer;font-size:13px;border-bottom:1px solid #f5f0eb;display:flex;align-items:center;gap:6px;}
+.aci:hover,.aci.hl{background:var(--al);}
+.aci .bt{font-size:10px;color:var(--muted);margin-left:auto;}
+/* Badge */
+.badge{background:var(--cream);border:1px solid var(--border);border-radius:4px;padding:11px 14px;display:flex;align-items:center;gap:11px;margin-bottom:22px;}
+.bav{width:38px;height:38px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0;}
+/* Loader */
+.loader{text-align:center;padding:44px 20px;}
+.spin{width:38px;height:38px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto 14px;}
+@keyframes sp{to{transform:rotate(360deg);}}
+.ltxt{font-size:13px;color:var(--muted);font-style:italic;}
+.lsub{font-size:11px;color:#b0a898;margin-top:6px;}
+/* Area blocks */
+.ab{border:1px solid var(--border);border-radius:5px;margin-bottom:13px;overflow:hidden;}
+.ahdr{background:var(--cream);padding:10px 14px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border);}
+.ati{font-weight:600;font-size:13px;flex:1;border:none;background:transparent;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;padding:0;}
+.ati:focus{background:#fff;border-bottom:1px solid var(--accent);padding:0 3px;}
+.acnt{font-size:10px;color:var(--muted);background:var(--border);padding:2px 7px;border-radius:9px;}
+.abody{padding:12px 14px;}
+/* Editable rows */
+.trow,.mrow{display:flex;align-items:flex-start;gap:7px;padding:3px 0;}
+.trow:hover,.mrow:hover{background:#fdfaf6;border-radius:3px;}
+.trow input[type=checkbox],.mrow input[type=checkbox]{width:auto;margin-top:4px;flex-shrink:0;cursor:pointer;}
+.trow input[type=checkbox]{accent-color:var(--accent);}
+.mrow input[type=checkbox]{accent-color:var(--ok);}
+.tta,.mta{flex:1;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:13px;resize:none;outline:none;padding:1px 3px;border-radius:2px;line-height:1.5;min-height:22px;}
+.tta:focus{background:#fdf8f0;border:1px solid var(--border);}
+.mta{color:var(--ok);font-weight:500;font-size:12px;}
+.mta:focus{background:#f0faf5;border:1px solid #b2d8c0;}
+.xbtn{font-size:15px;color:#d0c8be;cursor:pointer;border:none;background:none;padding:0 3px;line-height:1;flex-shrink:0;}
+.xbtn:hover{color:var(--accent);}
+.msec{margin-top:9px;padding-top:9px;border-top:1px dashed var(--border);}
+.mlbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.addrow{font-size:11px;color:var(--accent);cursor:pointer;border:none;background:none;padding:4px 0;font-family:'DM Sans',sans-serif;display:inline-block;margin-top:3px;}
+.addrow:hover{text-decoration:underline;}
+.addrow.green{color:var(--ok);}
+.delab{font-size:10px;color:#ccc;cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif;padding:1px 5px;}
+.delab:hover{color:var(--accent);}
+/* Competencies */
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:14px;}
+.ci{display:flex;align-items:center;gap:7px;padding:9px 11px;border:1px solid var(--border);border-radius:4px;cursor:pointer;transition:all .15s;}
+.ci:hover,.ci.ck{border-color:var(--accent);background:var(--al);}
+.ci input{accent-color:var(--accent);flex-shrink:0;cursor:pointer;}
+.ci span{font-size:13px;cursor:pointer;}
+/* JSC preview */
+.jp{font-size:13px;line-height:1.7;}
+.jtitle{font-family:'DM Serif Display',serif;font-size:25px;margin-bottom:5px;}
+.jgoal{background:#fffbe8;border-left:3px solid var(--gold);padding:13px 16px;margin:14px 0 18px;font-size:14px;line-height:1.7;border-radius:0 4px 4px 0;}
+.jtbl{width:100%;border-collapse:collapse;margin-bottom:22px;}
+.jtbl th{background:var(--ink);color:var(--paper);padding:9px 13px;text-align:left;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;}
+.jtbl td{padding:11px 13px;border:1px solid var(--border);vertical-align:top;}
+.jtbl tr:nth-child(even) td{background:var(--cream);}
+.anc{font-weight:700;font-size:12px;margin-bottom:7px;text-transform:uppercase;letter-spacing:.03em;}
+.atl{list-style:none;padding:0;}
+.atl li{padding:2px 0 2px 11px;position:relative;font-size:12px;}
+.atl li::before{content:'—';position:absolute;left:0;color:var(--muted);}
+.ml{list-style:none;padding:0;}
+.ml li{padding:2px 0 2px 13px;position:relative;font-size:12px;color:var(--ok);font-weight:500;}
+.ml li::before{content:'✓';position:absolute;left:0;font-size:10px;}
+.cnc{font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em;}
+.bl{list-style:none;padding:0;}
+.bl li{padding:2px 0 2px 11px;position:relative;font-size:12px;}
+.bl li::before{content:'•';position:absolute;left:1px;color:var(--accent);}
+.abar{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid var(--border);}
+/* Divider */
+.div{text-align:center;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:22px 0 16px;position:relative;}
+.div::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--border);}
+.div span{background:#fff;padding:0 11px;position:relative;}
+/* HR panel */
+.mrow3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px;}
+.mc{background:#fff;border:1px solid var(--border);border-radius:6px;padding:18px 22px;text-align:center;}
+.mn{font-family:'DM Serif Display',serif;font-size:34px;color:var(--accent);line-height:1.1;}
+.ml2{font-size:11px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.06em;}
+.chbox{background:#fff;border:1px solid var(--border);border-radius:6px;padding:22px;margin-bottom:22px;}
+.chtitle{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:18px;color:var(--muted);}
+.brow{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
+.bbrnd{font-size:10px;width:120px;text-align:right;flex-shrink:0;font-weight:500;}
+.btrk{flex:1;height:18px;background:var(--cream);border-radius:3px;overflow:hidden;display:flex;}
+.bdone{background:var(--ok);height:100%;}
+.btodo{background:#e8ddd5;height:100%;}
+.bnums{font-size:10px;color:var(--muted);width:45px;flex-shrink:0;}
+.filters{display:flex;gap:9px;margin-bottom:14px;align-items:center;flex-wrap:wrap;}
+.filters select{width:auto;min-width:150px;}
+.hrtbl{width:100%;border-collapse:collapse;font-size:13px;}
+.hrtbl th{background:var(--ink);color:var(--paper);padding:9px 13px;text-align:left;font-size:10px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;user-select:none;}
+.hrtbl th:hover{background:#2a2826;}
+.hrtbl td{padding:8px 13px;border-bottom:1px solid var(--border);}
+.hrtbl tr:hover td{background:var(--cream);}
+.sdone{color:var(--ok);font-weight:600;}.smiss{color:#c44;}
+/* Info / error */
+.ibox{background:#fffbe8;border:1px solid #e8d88a;border-radius:4px;padding:11px 14px;font-size:13px;color:#5a4e30;margin-bottom:14px;line-height:1.6;}
+.ebox{background:#fdf0ed;border:1px solid #f0b8ac;border-radius:4px;padding:14px 16px;font-size:13px;color:var(--accent);line-height:1.6;}
+/* Toast */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--ink);color:#fff;padding:11px 18px;border-radius:5px;font-size:13px;transform:translateY(80px);opacity:0;transition:all .3s;z-index:1000;}
+.toast.show{transform:translateY(0);opacity:1;}
+/* Nav */
+.navrow{display:flex;gap:9px;justify-content:space-between;align-items:center;}
+@media(max-width:580px){.cgrid{grid-template-columns:1fr;}.mrow3{grid-template-columns:1fr;}.main{padding:18px 14px;}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div>
+    <div class="logo">The Company <b>/ JSC Creator</b></div>
+    <div class="hsub">Kreator Job Score Card · BNI Polska</div>
+  </div>
+  <button class="hrbtn" onclick="switchHR()">Panel HR →</button>
+</header>
+
+<div class="sbar" id="sbar">
+  <div class="si on" id="si1"><div class="sn">1</div>Tożsamość</div>
+  <div class="si" id="si2"><div class="sn">2</div>Zadania</div>
+  <div class="si" id="si3"><div class="sn">3</div>Kompetencje</div>
+  <div class="si" id="si4"><div class="sn">4</div>Gotowy JSC</div>
+</div>
+
+<main class="main">
+
+<!-- S1 -->
+<div id="s1">
+  <div class="card">
+    <div class="ctitle">Kto jesteś?</div>
+    <div class="csub">Podaj imię i nazwisko, a następnie wybierz stanowisko z listy. AI automatycznie wyszuka typowy zakres obowiązków dla Twojej roli.</div>
+    <div class="field">
+      <label class="flbl">Imię i nazwisko</label>
+      <input type="text" id="iname" placeholder="np. Anna Kowalska" oninput="onName()">
+    </div>
+    <div class="field">
+      <label class="flbl">Stanowisko</label>
+      <div class="acw">
+        <input type="text" id="irol" placeholder="Wpisz nazwę stanowiska lub działu…" oninput="acFilter(this.value)" onfocus="acShow()" autocomplete="off">
+        <div class="acd" id="acd"></div>
+      </div>
+      <input type="hidden" id="hrol"><input type="hidden" id="hbrand">
+    </div>
+    <div id="ibadge" style="display:none" class="badge">
+      <div class="bav" id="bav">??</div>
+      <div><div style="font-weight:600;font-size:14px" id="bname"></div><div style="font-size:12px;color:var(--muted)" id="brol"></div></div>
+    </div>
+    <button class="btn btn-p" id="s1btn" onclick="goS2()" disabled>Dalej →</button>
+  </div>
+</div>
+
+<!-- S2 -->
+<div id="s2" style="display:none">
+  <div class="card">
+    <div class="ctitle">Edytuj zakres zadań</div>
+    <div class="csub">AI wyszukało typowy zakres obowiązków dla Twojego stanowiska. <strong>Kliknij w dowolny tekst, żeby go zmienić.</strong> Odznacz to, co Cię nie dotyczy. Dodaj własne zadania i mierniki.</div>
+    <div id="s2c"></div>
+    <div style="margin-top:14px"><button class="btn btn-s btn-sm" onclick="addArea()">+ Dodaj obszar</button></div>
+  </div>
+  <div class="navrow">
+    <button class="btn btn-s" onclick="setS(1)">← Wstecz</button>
+    <button class="btn btn-p" onclick="goS3()">Dalej →</button>
+  </div>
+</div>
+
+<!-- S3 -->
+<div id="s3" style="display:none">
+  <div class="card">
+    <div class="ctitle">Kompetencje</div>
+    <div class="csub">AI zaznaczyło kompetencje pasujące do Twojego stanowiska. Zmodyfikuj według potrzeb.</div>
+    <div class="cgrid" id="cgrid"></div>
+    <div>
+      <label class="flbl">Dodaj własną kompetencję</label>
+      <div style="display:flex;gap:7px">
+        <input type="text" id="custc" placeholder="np. Zarządzanie budżetem" style="flex:1">
+        <button class="btn btn-s btn-sm" onclick="addCust()">+ Dodaj</button>
+      </div>
+    </div>
+  </div>
+  <div class="navrow">
+    <button class="btn btn-s" onclick="setS(2)">← Wstecz</button>
+    <button class="btn btn-p" onclick="goS4()">Generuj JSC ↗</button>
+  </div>
+</div>
+
+<!-- S4 -->
+<div id="s4" style="display:none">
+  <div class="card"><div id="s4c"></div></div>
+</div>
+
+<!-- HR -->
+<div id="hrp" style="display:none">
+  <div class="card">
+    <div class="ctitle">Panel HR — Status JSC</div>
+    <div class="csub">Postęp tworzenia Job Score Cards · The Company / BNI Polska</div>
+    <div class="mrow3" id="hrmet"></div>
+    <div class="chbox"><div class="chtitle">Postęp per dział</div><div id="hrbar"></div></div>
+    <div class="div"><span>Lista pracowników</span></div>
+    <div class="filters">
+      <select id="fbrand" onchange="renderHR()"><option value="">Wszystkie działy</option></select>
+      <select id="fstat" onchange="renderHR()">
+        <option value="">Wszyscy</option><option value="done">Tylko z JSC</option><option value="miss">Tylko bez JSC</option>
+      </select>
+    </div>
+    <table class="hrtbl">
+      <thead><tr>
+        <th onclick="sortHR('brand')">Dział ↕</th>
+        <th onclick="sortHR('name')">Imię i Nazwisko ↕</th>
+        <th onclick="sortHR('role')">Stanowisko ↕</th>
+        <th onclick="sortHR('done')">Status ↕</th>
+      </tr></thead>
+      <tbody id="hrbody"></tbody>
+    </table>
+    <div style="margin-top:14px;text-align:right">
+      <button class="btn btn-s btn-sm" onclick="setS(1)">← Wróć do kreatora</button>
+    </div>
+  </div>
+</div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
+<script>
+// ==================== ORG DATA ====================
+const ORG=[
+  {brand:"Think Tank",role:"Dyrektor Zarządzająca",name:"Eliza Kruczkowska",done:true},
+  {brand:"Think Tank",role:"Dyrektor Marketingu",name:"Michał Skierski",done:true},
+  {brand:"Think Tank",role:"Dyrektor PR",name:"Barbara Skowrońska",done:false},
+  {brand:"Think Tank",role:"Head of Legal",name:"Rafał Wojciechowski",done:true},
+  {brand:"Think Tank",role:"Manager Operacyjny",name:"Katarzyna Nowakowska",done:true},
+  {brand:"Think Tank",role:"Stażysta / Marketing",name:"Jan Mystkowski",done:false},
+  {brand:"Think Tank",role:"Młodszy Specjalista ds. Deregulacji",name:"Fabian Gołąbek",done:true},
+  {brand:"Think Tank",role:"PM Brand Przedsiębiorcy",name:"Zuzanna Dziekońska",done:false},
+  {brand:"Think Tank",role:"Dyrektor Inicjatywy SprawdzaMy",name:"Jakub Młodzikowski",done:false},
+  {brand:"Think Tank",role:"Dyrektor ds. Deregulacji",name:"Paweł Wajda",done:false},
+  {brand:"Think Tank",role:"Legislator - Deregulacja",name:"Dominik Wasilewski",done:true},
+  {brand:"Think Tank",role:"Ekspert ds. Prawnych",name:"Piotr Patkowski",done:false},
+  {brand:"Think Tank",role:"Dyrektor ds. Rozwoju Członkostw",name:"Paweł Woźniak",done:false},
+  {brand:"Think Tank",role:"PM RPP i Fundraisingu",name:"Agata Okońska",done:false},
+  {brand:"Think Tank",role:"Młodszy Analityk",name:"Michał Gerus",done:true},
+  {brand:"Think Tank",role:"Project Manager",name:"Krzysztof Michalski",done:true},
+  {brand:"CE",role:"Dyrektor Zarządzająca",name:"Sylwia Rosa",done:false},
+  {brand:"CE",role:"Dyrektor ds. Sprzedaży",name:"Paulina Piotrowska",done:true},
+  {brand:"CE",role:"Szef Produkcji",name:"Katarzyna Czynszak",done:true},
+  {brand:"CE",role:"Project Manager",name:"Wojciech Borkowski",done:true},
+  {brand:"Komunikacja",role:"Manager ds. Komunikacji",name:"Ilona Korycka",done:false},
+  {brand:"Komunikacja",role:"Specjalista ds. Komunikacji",name:"",done:false},
+  {brand:"Marketing",role:"Dyrektor Marketingu",name:"Emilia Ostrowska",done:false},
+  {brand:"Marketing",role:"Traffic & Operations Manager",name:"Aleksandra Jeżowska",done:false},
+  {brand:"Marketing",role:"Senior Graphic Designer",name:"Iwo Kolasiński",done:false},
+  {brand:"Marketing",role:"Grafik",name:"Julia Kobza",done:false},
+  {brand:"Marketing",role:"Stażystka",name:"Natalia Rybaniec",done:false},
+  {brand:"Marketing",role:"Marketing Manager",name:"Kamil Kardaś",done:false},
+  {brand:"Marketing",role:"Manager ds. Produkcji Filmowych",name:"Paweł Żukowski",done:false},
+  {brand:"Marketing",role:"Specjalista ds. Produkcji Filmowych",name:"Jakub Bielecki",done:false},
+  {brand:"Marketing",role:"Specjalista ds. Produkcji Filmowych",name:"Marcin Frej",done:false},
+  {brand:"Marketing",role:"Digital & Video Project Specialist",name:"Mariusz Bąkowski",done:false},
+  {brand:"Marketing",role:"Strategic Communications Manager",name:"Agata Wilczyńska",done:false},
+  {brand:"Marketing",role:"Content Marketing Specialist",name:"Anna Radzka",done:false},
+  {brand:"Marketing",role:"Starszy Specjalista ds. Komunikacji",name:"Katarzyna Pawlak",done:false},
+  {brand:"Marketing",role:"Stażysta",name:"Weronika Krasińska",done:false},
+  {brand:"Operacje",role:"Dyrektor ds. Operacyjnych",name:"Adam Wroczyński",done:false},
+  {brand:"Operacje",role:"Manager Systemów Wsparcia Sprzedaży",name:"Łukasz Pasikowski",done:false},
+  {brand:"Operacje",role:"Manager ds. Operacyjnych",name:"Adam Grzeszkiewicz",done:false},
+  {brand:"Operacje",role:"Manager ds. Doskonalenia Procesów Wewnętrznych",name:"Karolina Szumacher",done:false},
+  {brand:"Operacje",role:"Specjalista IT",name:"Maciej Puntus",done:false},
+  {brand:"Operacje",role:"Office & Fleet Manager",name:"Katarzyna Gutkowska",done:false},
+  {brand:"Operacje",role:"Koordynator Biura KAT",name:"Pamela Byledbał",done:false},
+  {brand:"Operacje",role:"Specjalista ds. Obsługi Recepcji",name:"Klaudia Banaszek",done:false},
+  {brand:"Operacje",role:"Recepcjonistka",name:"(kilka osób)",done:false},
+  {brand:"Operacje",role:"Koordynator Floty",name:"Klaudia Karwat",done:false},
+  {brand:"Operacje",role:"Kierowca Zarządu",name:"Marcin Iżykiewicz",done:false},
+  {brand:"Operacje",role:"Specjalista ds. Operacyjnych",name:"Kornelia Szatow",done:false},
+  {brand:"HR",role:"Chief People Officer",name:"Katarzyna Bieńkowska",done:true},
+  {brand:"HR",role:"Dyrektor ds. Relacji Pracowniczych",name:"Iwona Olbryś",done:false},
+  {brand:"HR",role:"Dyrektor HR",name:"Małgorzata Pasikowska",done:false},
+  {brand:"HR",role:"Manager Projektów HR",name:"Magdalena Rapacka-Wojdat",done:false},
+  {brand:"HR",role:"Dyrektor ds. Szkoleń i Rozwoju HRBP",name:"Tomasz Sitarz",done:false},
+  {brand:"HR",role:"Ekspert ds. Szkoleń i Rozwoju",name:"Magdalena Polus",done:false},
+  {brand:"HR",role:"Senior HRBP",name:"Monika Wilkoławska",done:false},
+  {brand:"HR",role:"Specjalista ds. Kadr i Płac",name:"Ewelina Kęska",done:false},
+  {brand:"HR",role:"Koordynator HR",name:"Katarzyna Jeglińska",done:false},
+  {brand:"Finanse",role:"Dyrektor Finansowy",name:"Anna Piechowicz",done:false},
+  {brand:"Finanse",role:"Główna Księgowa",name:"Agnieszka Cieplak",done:false},
+  {brand:"Finanse",role:"Specjalista ds. Rozliczeń",name:"Lidia Cieszewska",done:false},
+  {brand:"Finanse",role:"Młodszy Specjalista ds. Finansów",name:"Kinga Woźniak",done:false},
+  {brand:"Finanse",role:"Manager Działu Controllingu",name:"Ewelina Dalke",done:false},
+  {brand:"Finanse",role:"Manager ds. Finansów",name:"Edyta Matusz-Bulińska",done:false},
+  {brand:"Biuro Zarządu",role:"Dyrektor Biura Zarządu",name:"Barbara Waśkiewicz",done:false},
+  {brand:"Dział Prawny",role:"Specjalista ds. Korporacyjnych",name:"Eliza Bielik",done:false},
+  {brand:"Dział Prawny",role:"Adwokat",name:"Marta Maliszewska",done:false},
+  {brand:"Asystentura",role:"Project Manager",name:"Bartosz Cieślik",done:false},
+  {brand:"Asystentura",role:"Executive Assistant",name:"Urszula Pałka",done:false},
+  {brand:"Asystentura",role:"Executive Assistant COO",name:"Dominika Wiśniewska",done:false},
+  {brand:"Asystentura",role:"Personal Assistant Partner",name:"Christina Chaplin",done:false},
+  {brand:"Biuro CEO",role:"Chief of Staff",name:"Szymon Kujawiak",done:false},
+  {brand:"Biuro CEO",role:"Strategic Project Manager",name:"(wakat)",done:false},
+  {brand:"Jakość i Raportowanie",role:"Dyrektor ds. Raportów Analiz i Systemów",name:"Kajetan Homka",done:false},
+  {brand:"Jakość i Raportowanie",role:"Specjalista ds. Szkoleń i Rozwoju Sprzedaży CC",name:"Patryk Wyczółkowski",done:false},
+  {brand:"Jakość i Raportowanie",role:"Specjalistka ds. Raportowania i Analiz CC",name:"Dominika Kubiak",done:false},
+  {brand:"Jakość i Raportowanie",role:"Specjalista ds. Automatyzacji",name:"Arkadiusz Pacyna",done:false},
+  {brand:"Jakość i Raportowanie",role:"Manager ds. Raportowania i Analiz CC",name:"Patrycja Chmielowska",done:false},
+  {brand:"Jakość i Raportowanie",role:"Manager Wsparcia Sprzedaży",name:"Karolina Kordal",done:false},
+  {brand:"Jakość i Raportowanie",role:"Specjalista ds. Procesów i Procedur CC",name:"Joanna Kurek",done:false},
+  {brand:"Wsparcie BNI",role:"Koordynator Regionalny",name:"(3 osoby)",done:false},
+  {brand:"Wsparcie BNI",role:"Dyrektor Wsparcia BNI",name:"Edyta Kaczmar",done:true},
+  {brand:"Wsparcie BNI",role:"Koordynator w MSC",name:"Julia Sokołowska",done:true},
+  {brand:"Wsparcie BNI",role:"Asystentka Biura",name:"Magdalena Leszczyńska",done:true},
+  {brand:"Wsparcie BNI",role:"Koordynator ds. Szkoleń",name:"Justyna Aniśko",done:true},
+  {brand:"Wsparcie BNI",role:"Specjalista ds. Komunikacji",name:"Zofia Kosowska",done:true},
+  {brand:"Wsparcie BNI",role:"Koordynator w MSC",name:"Marta Daniszewska",done:true},
+  {brand:"Wsparcie BNI",role:"Opiekun Klienta Biznesowego",name:"Weronika Woder",done:true},
+  {brand:"Wsparcie BNI",role:"Koordynator ds. Franczyzy",name:"Marta Walikowska",done:false},
+  {brand:"Wsparcie BNI+",role:"Manager Wsparcia Sprzedaży BNI+",name:"Anika Cimochowska",done:false},
+  {brand:"Wsparcie BNI+",role:"Koordynator Wsparcia Sprzedaży BNI+",name:"(2 osoby)",done:false},
+  {brand:"Wsparcie BNI+",role:"Młodszy Koordynator Wsparcia Sprzedaży BNI+",name:"",done:false},
+  {brand:"Wsparcie CC",role:"Dyrektor ds. Wsparcia Sprzedaży",name:"(wakat)",done:false},
+  {brand:"Wsparcie CC",role:"Lider Zespołu Wsparcia ds. Relacji",name:"",done:false},
+  {brand:"Wsparcie CC",role:"Lider Zespołu Wsparcia Sprzedaży",name:"",done:false},
+  {brand:"Wsparcie CC",role:"Lider Wsparcia Zespołu Organizacyjnego",name:"Iwona Golińska",done:false},
+  {brand:"Wsparcie CC",role:"Koordynator Wsparcia Sprzedaży CC",name:"(10 osób)",done:false},
+  {brand:"Wsparcie CC",role:"Koordynator Zespołu Organizacyjnego CC",name:"Kamila Juźwiak",done:false},
+  {brand:"Wsparcie CC+",role:"Manager Wsparcia Sprzedaży CC+",name:"",done:false},
+  {brand:"Wsparcie CC+",role:"Koordynator Wsparcia Sprzedaży CC+",name:"",done:false}
+];
+const COMPS=["Partnerstwo biznesowe","Myślenie strategiczne i operacyjna skuteczność","Komunikacja i wpływ","Orientacja na wyniki","Zarządzanie zmianą","Praca zespołowa i współpraca","Przywództwo i rozwój zespołu","Analityczne myślenie","Orientacja na klienta","Innowacyjność i ciągłe doskonalenie","Samodzielność operacyjna","Zarządzanie projektami","Ekspertyza merytoryczna","Odpowiedzialność i rzetelność","Organizacja pracy własnej"];
+
+let ST={name:'',role:'',brand:'',areas:[],comps:[],jsc:null};
+const orgData=JSON.parse(JSON.stringify(ORG));
+let hrSort={k:'brand',d:1};
+
+// ==================== AUTOCOMPLETE ====================
+// Using mousedown to fire before blur closes dropdown
+function acFilter(q){
+  const dd=document.getElementById('acd');
+  dd.innerHTML='';
+  if(!q.trim()){dd.classList.remove('open');return;}
+  const q2=q.toLowerCase();
+  const grps={};
+  orgData.forEach(p=>{
+    if(p.role.toLowerCase().includes(q2)||p.brand.toLowerCase().includes(q2)||(p.name&&p.name.toLowerCase().includes(q2))){
+      if(!grps[p.brand])grps[p.brand]=[];
+      grps[p.brand].push(p);
+    }
+  });
+  const keys=Object.keys(grps);
+  if(!keys.length){
+    const d=document.createElement('div');d.style.cssText='padding:12px 13px;color:#999;font-size:13px';d.textContent='Brak wyników';
+    dd.appendChild(d);dd.classList.add('open');return;
+  }
+  keys.forEach(b=>{
+    const g=document.createElement('div');g.className='acg';g.textContent=b;dd.appendChild(g);
+    grps[b].forEach(p=>{
+      const item=document.createElement('div');item.className='aci';
+      const s1=document.createElement('span');s1.style.fontWeight='500';s1.textContent=p.role;
+      const s2=document.createElement('span');s2.className='bt';s2.textContent=p.brand;
+      item.appendChild(s1);item.appendChild(s2);
+      // Use mousedown (fires before blur) so the click registers
+      item.addEventListener('mousedown',function(e){
+        e.preventDefault(); // prevent input blur
+        pickRole(p.role,p.brand,p.name||'');
+      });
+      dd.appendChild(item);
+    });
+  });
+  dd.classList.add('open');
+}
+function acShow(){acFilter(document.getElementById('irol').value);}
+// Close on outside click
+document.addEventListener('click',e=>{if(!e.target.closest('.acw'))document.getElementById('acd').classList.remove('open');});
+
+function pickRole(role,brand,name){
+  document.getElementById('hrol').value=role;
+  document.getElementById('hbrand').value=brand;
+  document.getElementById('irol').value=role;
+  document.getElementById('acd').classList.remove('open');
+  ST.role=role;ST.brand=brand;ST.areas=[];
+  if(name&&name!=='(wakat)'&&!document.getElementById('iname').value){
+    document.getElementById('iname').value=name;ST.name=name;
+  }
+  updBadge();chkS1();
+}
+function onName(){ST.name=document.getElementById('iname').value;updBadge();chkS1();}
+function updBadge(){
+  const n=document.getElementById('iname').value.trim();
+  const r=document.getElementById('hrol').value;
+  const b=document.getElementById('hbrand').value;
+  if(r&&b){
+    document.getElementById('ibadge').style.display='flex';
+    document.getElementById('bname').textContent=n||'—';
+    document.getElementById('brol').textContent=r+' · '+b;
+    const p=(n||'??').split(' ');
+    document.getElementById('bav').textContent=(p[0][0]+(p[1]?p[1][0]:'')).toUpperCase();
+  }else document.getElementById('ibadge').style.display='none';
+}
+function chkS1(){document.getElementById('s1btn').disabled=!(document.getElementById('iname').value.trim()&&document.getElementById('hrol').value);}
+
+// ==================== STEP NAV ====================
+function setS(n){
+  [1,2,3,4].forEach(i=>{
+    document.getElementById('s'+i).style.display=i===n?'block':'none';
+    const si=document.getElementById('si'+i);
+    si.className='si'+(i<n?' done':i===n?' on':'');
+    si.querySelector('.sn').textContent=i<n?'✓':i;
+  });
+  document.getElementById('hrp').style.display='none';
+  document.getElementById('sbar').style.display='flex';
+}
+async function goS2(){
+  ST.name=document.getElementById('iname').value.trim();
+  ST.role=document.getElementById('hrol').value;
+  ST.brand=document.getElementById('hbrand').value;
+  setS(2);await loadAreas();
+}
+function goS3(){ST.areas=collectAreas();setS(3);buildComps();}
+async function goS4(){ST.comps=collectComps();setS(4);await genJSC();}
+
+// ==================== STEP 2: AI AREA SEARCH ====================
+async function loadAreas(){
+  if(ST.areas&&ST.areas.length){renderAreas(ST.areas);return;}
+  document.getElementById('s2c').innerHTML=`
+    <div class="loader">
+      <div class="spin"></div>
+      <div class="ltxt">AI szuka zakresu obowiązków dla stanowiska <strong>${ST.role}</strong>…</div>
+      <div class="lsub">Przeszukuję polskie ogłoszenia pracy i opisy stanowisk w sieci</div>
+    </div>`;
+
+  try{
+    const resp=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:2500,
+        tools:[{"type":"web_search_20250305","name":"web_search"}],
+        messages:[{role:"user",content:`Używając web search, wyszukaj rzeczywiste zakresy obowiązków dla stanowiska "${ST.role}" w polskich firmach. Szukaj ogłoszeń pracy na Pracuj.pl, LinkedIn.com/jobs, NoFluffJobs.com, JustJoin.it. Szukaj po polsku: "${ST.role} zakres obowiązków" lub "${ST.role} opis stanowiska".
+
+Na podstawie znalezionych wyników stwórz REALISTYCZNY zakres odpowiedzialności dla stanowiska "${ST.role}" w dziale "${ST.brand}" organizacji The Company / BNI Polska (networking B2B, ~100 osób, Polska).
+
+KRYTYCZNE: Zadania muszą być KONKRETNE i SPECYFICZNE dla tej roli - nie pisz ogólnych frazesów jak "realizacja celów" czy "komunikacja z zespołem". Każde zadanie powinno opisywać co ta konkretna osoba FAKTYCZNIE robi w pracy każdego dnia.
+
+Zwróć WYŁĄCZNIE czysty JSON, zero innych słów:
+{"obszary":[{"nazwa":"Nazwa obszaru","zadania":["Konkretne zadanie operacyjne 1","Konkretne zadanie operacyjne 2","Konkretne zadanie operacyjne 3","Konkretne zadanie operacyjne 4"],"mierniki":["Miernik z liczbą/% 1","Miernik z konkretnymi liczbami 2"]}]}
+
+Wymagania:
+- 4-5 obszarów
+- Każdy obszar: 4-5 KONKRETNYCH zadań (co robi ta osoba, nie jakie ma mieć cechy)
+- Każdy obszar: 2-3 mierzalne wskaźniki z liczbami/procentami/terminami
+- Język: polski, formalny, operacyjny`}]
+      })
+    });
+    const data=await resp.json();
+    let txt='';
+    data.content.forEach(b=>{if(b.type==='text')txt+=b.text;});
+    const s=txt.indexOf('{'),e=txt.lastIndexOf('}');
+    if(s<0||e<=s)throw new Error('brak JSON w odpowiedzi');
+    const parsed=JSON.parse(txt.substring(s,e+1));
+    ST.areas=parsed.obszary;
+    renderAreas(ST.areas);
+  }catch(err){
+    console.warn('API error:',err.message);
+    // Show error with option to retry or use offline mode
+    document.getElementById('s2c').innerHTML=`
+      <div class="ebox">
+        <strong>Nie udało się pobrać danych z sieci.</strong><br>
+        Możliwy powód: aplikacja otwarta z dysku lokalnego (plik HTML) nie może łączyć się z API.<br><br>
+        <strong>Rozwiązanie:</strong> Otwórz aplikację przez przeglądarkę z linku (nie z pliku). Skontaktuj się z HR po instrukcję udostępnienia linku.<br><br>
+        <button class="btn btn-p btn-sm" onclick="loadAreas()" style="margin-right:8px">↺ Spróbuj ponownie</button>
+        <button class="btn btn-s btn-sm" onclick="useOffline()">Kontynuuj offline (ogólny szablon)</button>
+      </div>`;
+  }
+}
+
+function useOffline(){
+  ST.areas=[
+    {nazwa:"Realizacja zadań operacyjnych",zadania:["Planowanie i realizacja kluczowych zadań zgodnie z priorytetami działu","Regularne raportowanie wyników do bezpośredniego przełożonego","Współpraca z innymi działami w zakresie wspólnych projektów","Identyfikowanie i eskalowanie ryzyk mogących wpłynąć na realizację celów","Dbanie o jakość i terminowość realizowanych zadań"],mierniki:["95% zadań realizowanych terminowo","Ocena jakości przez przełożonego min. 4/5"]},
+    {nazwa:"Komunikacja i współpraca",zadania:["Aktywna współpraca z zespołem i klientami wewnętrznymi","Regularne uczestnictwo w spotkaniach zespołowych","Przygotowywanie raportów i podsumowań dla interesariuszy","Proaktywne dzielenie się wiedzą z zespołem","Budowanie relacji z partnerami wewnętrznymi i zewnętrznymi"],mierniki:["100% raportów dostarczonych terminowo","Ocena współpracy przez klientów wewnętrznych min. 4/5"]},
+    {nazwa:"Zarządzanie projektami",zadania:["Samodzielne prowadzenie przypisanych projektów od inicjacji do zamknięcia","Planowanie zasobów, harmonogramów i budżetów","Monitorowanie postępów i informowanie interesariuszy o statusie","Zarządzanie ryzykiem i podejmowanie działań korygujących","Dokumentowanie wyników i lessons learned"],mierniki:["90% projektów zakończonych w terminie","100% projektów w zakładanym budżecie"]},
+    {nazwa:"Rozwój kompetencji",zadania:["Aktualizacja wiedzy specjalistycznej i branżowej","Udział w szkoleniach i programach rozwojowych","Wdrażanie usprawnień procesów w obszarze odpowiedzialności","Realizacja indywidualnego planu rozwoju"],mierniki:["Realizacja 80% celów z planu rozwoju","Min. 2 inicjatywy usprawniające procesy rocznie"]}
+  ];
+  const notice=document.createElement('div');
+  notice.className='ibox';
+  notice.innerHTML='<strong>ℹ Tryb offline:</strong> Załadowano ogólny szablon. Edytuj zadania i mierniki bezpośrednio w polach — kliknij w tekst i zacznij pisać.';
+  document.getElementById('s2c').innerHTML='';
+  document.getElementById('s2c').appendChild(notice);
+  renderAreas(ST.areas,true);
+}
+
+// ==================== RENDER AREAS ====================
+function renderAreas(areas,append=false){
+  const cont=document.getElementById('s2c');
+  if(!append)cont.innerHTML='';
+  const wrap=document.createElement('div');wrap.id='awrap';
+  areas.forEach((a,i)=>wrap.appendChild(mkAreaBlock(a,i)));
+  cont.appendChild(wrap);
+}
+
+function mkAreaBlock(area,ai){
+  const block=document.createElement('div');
+  block.className='ab';block.id='ab'+ai;
+
+  // Header
+  const hdr=document.createElement('div');hdr.className='ahdr';
+  const ti=document.createElement('input');ti.type='text';ti.className='ati';ti.value=area.nazwa;ti.placeholder='Nazwa obszaru';
+  const cnt=document.createElement('span');cnt.className='acnt';cnt.textContent=area.zadania.length+' zadań';
+  const del=document.createElement('button');del.className='delab';del.textContent='✕ usuń obszar';
+  del.onclick=()=>{if(confirm('Usunąć obszar "'+area.nazwa+'"?'))block.remove();};
+  hdr.appendChild(ti);hdr.appendChild(cnt);hdr.appendChild(del);
+  block.appendChild(hdr);
+
+  // Body
+  const body=document.createElement('div');body.className='abody';
+
+  // Tasks
+  const tw=document.createElement('div');tw.id='tw'+ai;
+  area.zadania.forEach((z,zi)=>tw.appendChild(mkRow(z,false,ai,zi)));
+  body.appendChild(tw);
+  const addT=document.createElement('button');addT.className='addrow';addT.textContent='+ Dodaj zadanie';
+  addT.onclick=()=>{const r=mkRow('',false,ai,tw.children.length);tw.appendChild(r);r.querySelector('textarea').focus();};
+  body.appendChild(addT);
+
+  // Mierniki
+  const ms=document.createElement('div');ms.className='msec';
+  const mlbl=document.createElement('div');mlbl.className='mlbl';mlbl.textContent='📊 Mierniki sukcesu';
+  ms.appendChild(mlbl);
+  const mw=document.createElement('div');mw.id='mw'+ai;
+  area.mierniki.forEach((m,mi)=>mw.appendChild(mkRow(m,true,ai,mi)));
+  ms.appendChild(mw);
+  const addM=document.createElement('button');addM.className='addrow green';addM.textContent='+ Dodaj miernik';
+  addM.onclick=()=>{const r=mkRow('',true,ai,mw.children.length);mw.appendChild(r);r.querySelector('textarea').focus();};
+  ms.appendChild(addM);
+  body.appendChild(ms);
+  block.appendChild(body);
+  return block;
+}
+
+function mkRow(text,isMiernik,ai,idx){
+  const row=document.createElement('div');
+  row.className=isMiernik?'mrow':'trow';
+
+  const cb=document.createElement('input');cb.type='checkbox';cb.checked=true;
+
+  const ta=document.createElement('textarea');
+  ta.className=isMiernik?'mta':'tta';
+  ta.value=text;ta.rows=1;
+  ta.oninput=function(){this.style.height='auto';this.style.height=this.scrollHeight+'px';};
+  setTimeout(()=>{ta.style.height='auto';ta.style.height=(ta.scrollHeight||24)+'px';},10);
+
+  const xb=document.createElement('button');xb.className='xbtn';xb.textContent='×';xb.title='Usuń';
+  xb.onclick=()=>row.remove();
+
+  row.appendChild(cb);row.appendChild(ta);row.appendChild(xb);
+  return row;
+}
+
+function addArea(){
+  const name=prompt('Nazwa nowego obszaru odpowiedzialności:');if(!name)return;
+  const newA={nazwa:name,zadania:[],mierniki:[]};
+  const ai='a'+Date.now();
+  if(!ST.areas)ST.areas=[];
+  ST.areas.push(newA);
+  const wrap=document.getElementById('awrap')||document.getElementById('s2c');
+  wrap.appendChild(mkAreaBlock(newA,ai));
+}
+
+function collectAreas(){
+  const res=[];
+  document.querySelectorAll('.ab').forEach(block=>{
+    const title=block.querySelector('.ati')?.value?.trim();if(!title)return;
+    const zadania=[];
+    block.querySelectorAll('.trow').forEach(row=>{
+      const cb=row.querySelector('input');const ta=row.querySelector('textarea');
+      if(cb?.checked&&ta?.value?.trim())zadania.push(ta.value.trim());
+    });
+    const mierniki=[];
+    block.querySelectorAll('.mrow').forEach(row=>{
+      const cb=row.querySelector('input');const ta=row.querySelector('textarea');
+      if(cb?.checked&&ta?.value?.trim())mierniki.push(ta.value.trim());
+    });
+    if(zadania.length)res.push({nazwa:title,zadania,mierniki});
+  });
+  return res;
+}
+
+// ==================== STEP 3: COMPETENCIES ====================
+function sugComps(role){
+  const r=role.toLowerCase();
+  if(r.includes('hr')||r.includes('hrbp')||r.includes('kadr')||r.includes('rekrut'))return[0,1,2,12,10];
+  if(r.includes('dyrekt')||r.includes('chief')||r.includes('head')||r.includes('cpo'))return[0,1,2,3,6];
+  if(r.includes('manager')||r.includes('lider')||r.includes('kierow'))return[0,3,5,6,11];
+  if(r.includes('sprzedaż')||r.includes('sprzed')||r.includes('klient')||r.includes('opiekun'))return[3,8,2,9,0];
+  if(r.includes('spec')||r.includes('koord')||r.includes('analiz')||r.includes('raport'))return[12,13,14,7,3];
+  if(r.includes('prawny')||r.includes('prawni')||r.includes('adwokat')||r.includes('korpor'))return[12,13,2,0,7];
+  if(r.includes('market')||r.includes('komunik')||r.includes('grafik')||r.includes('content'))return[2,9,8,3,11];
+  if(r.includes('finans')||r.includes('ksieg')||r.includes('control')||r.includes('rozlic'))return[7,12,13,14,3];
+  if(r.includes('it')||r.includes('automat')||r.includes('system'))return[7,11,12,9,14];
+  return[2,3,12,13,14];
+}
+function buildComps(){
+  const sug=sugComps(ST.role);
+  document.getElementById('cgrid').innerHTML=COMPS.map((c,i)=>{
+    const ch=sug.includes(i);
+    return`<label class="ci${ch?' ck':''}" id="ci${i}"><input type="checkbox" id="cc${i}" ${ch?'checked':''} onchange="togComp(${i})"><span>${c}</span></label>`;
+  }).join('');
+}
+function togComp(i){document.getElementById('ci'+i).className='ci'+(document.getElementById('cc'+i).checked?' ck':'');}
+function addCust(){
+  const v=document.getElementById('custc').value.trim();if(!v)return;
+  const id='cx'+Date.now();
+  const lbl=document.createElement('label');lbl.className='ci ck';lbl.id='ci'+id;
+  lbl.innerHTML=`<input type="checkbox" id="cc${id}" checked onchange="togComp('${id}')"><span>${v}</span>`;
+  document.getElementById('cgrid').appendChild(lbl);
+  document.getElementById('custc').value='';
+}
+function collectComps(){
+  const r=[];
+  document.querySelectorAll('#cgrid input[type=checkbox]').forEach(cb=>{
+    if(cb.checked)r.push(cb.closest('label').querySelector('span').textContent);
+  });
+  return r;
+}
+
+// ==================== STEP 4: GENERATE JSC ====================
+async function genJSC(){
+  document.getElementById('s4c').innerHTML=`<div class="loader"><div class="spin"></div><div class="ltxt">AI tworzy Twój Job Score Card…</div><div class="lsub">Generowanie treści na podstawie wybranych zadań i kompetencji</div></div>`;
+  const aj=JSON.stringify(ST.areas.map(a=>({nazwa:a.nazwa,zadania:a.zadania,mierniki:a.mierniki})));
+  try{
+    const resp=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",max_tokens:2500,
+        messages:[{role:"user",content:`Stwórz profesjonalny Job Score Card (JSC) dla The Company / BNI Polska.
+
+Stanowisko: ${ST.role}
+Dział: ${ST.brand}
+Pracownik: ${ST.name}
+Obszary odpowiedzialności: ${aj}
+Kompetencje: ${ST.comps.join(', ')}
+
+Instrukcje:
+1. CEL STANOWISKA: 3-4 zdania — opisz unikalną wartość tej roli, jej miejsce w organizacji i kluczowy cel istnienia tego stanowiska. Bądź konkretny/a.
+2. OBSZARY: Użyj DOKŁADNIE tych zadań i mierników które podałem. Nie zmieniaj ich treści. Mierniki muszą być LICZBY: "Minimum 85%", "100% procesów", "w ciągu 30 dni", "Maksymalnie 3 razy".
+3. KOMPETENCJE: 3-4 observable behaviours per kompetencja, zaczynające się od czasownika w 3. osobie l.poj. ("Buduje...", "Proaktywnie identyfikuje...", "Prowadzi...").
+
+Zwróć WYŁĄCZNIE czysty JSON — zero markdown, zero komentarzy:
+{"cel":"...","obszary":[{"nazwa":"","zadania":[],"mierniki":[]}],"kompetencje":[{"nazwa":"","zachowania":[]}]}`}]
+      })
+    });
+    const data=await resp.json();
+    let txt='';data.content.forEach(b=>{if(b.type==='text')txt+=b.text;});
+    const s=txt.indexOf('{'),e=txt.lastIndexOf('}');
+    if(s<0||e<=s)throw new Error('brak JSON');
+    ST.jsc=JSON.parse(txt.substring(s,e+1));
+    ST.jsc.stanowisko=ST.role;ST.jsc.brand=ST.brand;ST.jsc.name=ST.name;
+    const ent=orgData.find(p=>p.role===ST.role&&p.brand===ST.brand);if(ent)ent.done=true;
+    renderJSC(ST.jsc);
+  }catch(err){
+    document.getElementById('s4c').innerHTML=`
+      <div class="ebox">
+        <strong>Błąd generowania JSC.</strong> ${err.message}<br><br>
+        <button class="btn btn-p btn-sm" onclick="genJSC()" style="margin-right:8px">↺ Spróbuj ponownie</button>
+        <button class="btn btn-s btn-sm" onclick="offlineJSC()">Generuj offline</button>
+      </div>`;
+  }
+}
+
+function offlineJSC(){
+  ST.jsc={
+    stanowisko:ST.role,brand:ST.brand,name:ST.name,
+    cel:`Głównym celem stanowiska ${ST.role} w ${ST.brand} jest efektywna realizacja przypisanego zakresu odpowiedzialności oraz wnoszenie mierzalnej wartości do celów biznesowych organizacji. Osoba na tym stanowisku działa jako kluczowy ekspert w swoim obszarze, ściśle współpracując z menedżerami i zespołem. Stanowisko wymaga wysokiej samodzielności operacyjnej, proaktywności i orientacji na wyniki.`,
+    obszary:ST.areas,
+    kompetencje:ST.comps.slice(0,5).map(c=>({nazwa:c,zachowania:[
+      `Systematycznie realizuje zadania z obszaru ${c.toLowerCase()} na wysokim poziomie jakości.`,
+      `Proaktywnie identyfikuje obszary wymagające poprawy i podejmuje działania naprawcze.`,
+      `Buduje pozytywne relacje robocze oparte na zaufaniu i otwartej komunikacji.`
+    ]}))
+  };
+  const ent=orgData.find(p=>p.role===ST.role&&p.brand===ST.brand);if(ent)ent.done=true;
+  renderJSC(ST.jsc);
+}
+
+function renderJSC(d){
+  let h=`<div class="jp">
+  <div class="jtitle">${d.stanowisko}</div>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:3px;letter-spacing:.04em;text-transform:uppercase">${d.brand} &nbsp;·&nbsp; ${d.name}</div>
+  <div class="jgoal">${d.cel}</div>
+  <div class="div"><span>Zakres odpowiedzialności</span></div>
+  <table class="jtbl"><thead><tr><th style="width:56%">Obszar odpowiedzialności</th><th>Mierniki sukcesu</th></tr></thead><tbody>`;
+  d.obszary.forEach(a=>{
+    h+=`<tr><td><div class="anc">${a.nazwa}</div><ul class="atl">`;
+    a.zadania.forEach(z=>{h+=`<li>${z}</li>`;});
+    h+=`</ul></td><td><ul class="ml">`;
+    (a.mierniki||[]).forEach(m=>{h+=`<li>${m}</li>`;});
+    h+=`</ul></td></tr>`;
+  });
+  h+=`</tbody></table>
+  <div class="div"><span>Kompetencje</span></div>
+  <table class="jtbl"><thead><tr><th style="width:28%">Kompetencja</th><th>Zachowanie</th></tr></thead><tbody>`;
+  d.kompetencje.forEach(c=>{
+    h+=`<tr><td><div class="cnc">${c.nazwa}</div></td><td><ul class="bl">`;
+    c.zachowania.forEach(b=>{h+=`<li>${b}</li>`;});
+    h+=`</ul></td></tr>`;
+  });
+  h+=`</tbody></table></div>
+  <div class="abar">
+    <button class="btn btn-p" onclick="dlDocx()">⬇ Pobierz .docx</button>
+    <button class="btn btn-s" onclick="cpyTxt()">⎘ Kopiuj</button>
+    <button class="btn btn-s" onclick="setS(2)">✎ Edytuj zadania</button>
+    <button class="btn btn-s" onclick="resetAll()">+ Nowy JSC</button>
+  </div>`;
+  document.getElementById('s4c').innerHTML=h;
+}
+
+// ==================== COPY ====================
+function cpyTxt(){
+  if(!ST.jsc)return;
+  const d=ST.jsc;
+  let t=`${d.stanowisko}\n${d.brand} · ${d.name}\n\n${d.cel}\n\nZAKRES ODPOWIEDZIALNOŚCI\n\n`;
+  d.obszary.forEach(a=>{t+=`${a.nazwa.toUpperCase()}\n`;a.zadania.forEach(z=>{t+=`  — ${z}\n`;});t+=`\nMierniki:\n`;(a.mierniki||[]).forEach(m=>{t+=`  • ${m}\n`;});t+='\n';});
+  t+=`KOMPETENCJE\n\n`;d.kompetencje.forEach(c=>{t+=`${c.nazwa.toUpperCase()}\n`;c.zachowania.forEach(b=>{t+=`  • ${b}\n`;});t+='\n';});
+  navigator.clipboard.writeText(t).then(()=>showToast('Skopiowano ✓')).catch(()=>showToast('Błąd kopiowania'));
+}
+
+// ==================== DOCX ====================
+async function dlDocx(){
+  if(!ST.jsc){showToast('Brak danych JSC');return;}
+  if(typeof docx==='undefined'){showToast('Biblioteka .docx się ładuje — poczekaj chwilę');return;}
+  const d=ST.jsc;
+  const{Document,Packer,Paragraph,Table,TableRow,TableCell,TextRun,WidthType,ShadingType,LevelFormat,AlignmentType}=docx;
+  const bdr={style:'single',size:1,color:'E0D9CE'};
+  const bords={top:bdr,bottom:bdr,left:bdr,right:bdr};
+  const marg={top:80,bottom:80,left:120,right:120};
+  const W=9026; // A4 content width DXA
+
+  const hRow=(c1,c2,w1pct)=>new TableRow({children:[
+    new TableCell({borders:bords,margins:marg,shading:{type:ShadingType.CLEAR,fill:'0f0e0d',color:'0f0e0d'},
+      width:{size:Math.round(W*w1pct/100),type:WidthType.DXA},
+      children:[new Paragraph({children:[new TextRun({text:c1,color:'FFFFFF',bold:true,size:18,font:'Calibri'})]})]
+    }),
+    new TableCell({borders:bords,margins:marg,shading:{type:ShadingType.CLEAR,fill:'0f0e0d',color:'0f0e0d'},
+      width:{size:W-Math.round(W*w1pct/100),type:WidthType.DXA},
+      children:[new Paragraph({children:[new TextRun({text:c2,color:'FFFFFF',bold:true,size:18,font:'Calibri'})]})]
+    })
+  ]});
+
+  const numbering={config:[
+    {reference:'bullets',levels:[{level:0,format:LevelFormat.BULLET,text:'–',alignment:AlignmentType.LEFT,style:{paragraph:{indent:{left:440,hanging:220}}}}]},
+    {reference:'mbullets',levels:[{level:0,format:LevelFormat.BULLET,text:'✓',alignment:AlignmentType.LEFT,style:{paragraph:{indent:{left:440,hanging:220}}}}]}
+  ]};
+
+  const aRows=d.obszary.map(a=>new TableRow({children:[
+    new TableCell({borders:bords,margins:marg,width:{size:Math.round(W*56/100),type:WidthType.DXA},children:[
+      new Paragraph({children:[new TextRun({text:a.nazwa.toUpperCase(),bold:true,size:18,font:'Calibri'})]}),
+      ...a.zadania.map(z=>new Paragraph({numbering:{reference:'bullets',level:0},children:[new TextRun({text:z,size:16,font:'Calibri'})]}))
+    ]}),
+    new TableCell({borders:bords,margins:marg,width:{size:W-Math.round(W*56/100),type:WidthType.DXA},children:
+      (a.mierniki&&a.mierniki.length)?a.mierniki.map(m=>new Paragraph({numbering:{reference:'mbullets',level:0},children:[new TextRun({text:m,size:16,font:'Calibri',color:'2d7a4f'})]})):[new Paragraph({})]
+    })
+  ]}));
+
+  const cRows=d.kompetencje.map(c=>new TableRow({children:[
+    new TableCell({borders:bords,margins:marg,width:{size:Math.round(W*28/100),type:WidthType.DXA},children:[new Paragraph({children:[new TextRun({text:c.nazwa.toUpperCase(),bold:true,size:17,font:'Calibri'})]})]}) ,
+    new TableCell({borders:bords,margins:marg,width:{size:W-Math.round(W*28/100),type:WidthType.DXA},children:
+      c.zachowania.map(b=>new Paragraph({numbering:{reference:'bullets',level:0},children:[new TextRun({text:b,size:16,font:'Calibri'})]}))
+    })
+  ]}));
+
+  const doc=new Document({numbering,sections:[{
+    properties:{page:{size:{width:11906,height:16838},margin:{top:1134,right:1134,bottom:1134,left:1134}}},
+    children:[
+      new Paragraph({children:[new TextRun({text:d.stanowisko,bold:true,size:38,font:'Calibri',color:'0f0e0d'})]}),
+      new Paragraph({children:[new TextRun({text:`${d.brand}  ·  ${d.name}`,size:18,color:'8a8278',font:'Calibri'})],spacing:{after:160}}),
+      new Paragraph({children:[new TextRun({text:d.cel,size:19,font:'Calibri',italics:true,color:'5a4e30'})],shading:{type:ShadingType.CLEAR,fill:'fffbe8',color:'fffbe8'},spacing:{after:200}}),
+      new Paragraph({children:[new TextRun({text:'ZAKRES ODPOWIEDZIALNOŚCI',bold:true,size:22,font:'Calibri',color:'c8391a'})],spacing:{after:100}}),
+      new Table({width:{size:W,type:WidthType.DXA},columnWidths:[Math.round(W*56/100),W-Math.round(W*56/100)],rows:[hRow('OBSZAR ODPOWIEDZIALNOŚCI','MIERNIKI SUKCESU',56),...aRows]}),
+      new Paragraph({spacing:{after:160}}),
+      new Paragraph({children:[new TextRun({text:'KOMPETENCJE',bold:true,size:22,font:'Calibri',color:'c8391a'})],spacing:{after:100}}),
+      new Table({width:{size:W,type:WidthType.DXA},columnWidths:[Math.round(W*28/100),W-Math.round(W*28/100)],rows:[hRow('KOMPETENCJA','ZACHOWANIE',28),...cRows]})
+    ]
+  }]});
+
+  const blob=await Packer.toBlob(doc);
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;
+  const ln=(d.name||'Pracownik').split(' ').pop();
+  a.download=`JSC_${ln}_${d.stanowisko.replace(/[^\w]/g,'_').substring(0,25)}.docx`;
+  a.click();URL.revokeObjectURL(url);
+  showToast('Plik .docx pobrany ✓');
+}
+
+function resetAll(){
+  ST={name:'',role:'',brand:'',areas:[],comps:[],jsc:null};
+  ['iname','irol'].forEach(id=>document.getElementById(id).value='');
+  ['hrol','hbrand'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ibadge').style.display='none';
+  document.getElementById('s1btn').disabled=true;
+  setS(1);
+}
+
+// ==================== HR PANEL ====================
+function switchHR(){
+  [1,2,3,4].forEach(i=>document.getElementById('s'+i).style.display='none');
+  document.getElementById('hrp').style.display='block';
+  document.getElementById('sbar').style.display='none';
+  buildHR();
+}
+function buildHR(){
+  const tot=orgData.length,dn=orgData.filter(p=>p.done).length,pct=Math.round(dn/tot*100);
+  document.getElementById('hrmet').innerHTML=`
+    <div class="mc"><div class="mn">${dn}/${tot}</div><div class="ml2">Ukończone JSC</div></div>
+    <div class="mc"><div class="mn">${pct}%</div><div class="ml2">Procent ukończenia</div></div>
+    <div class="mc"><div class="mn">${tot-dn}</div><div class="ml2">Bez JSC</div></div>`;
+  const brands={};
+  orgData.forEach(p=>{if(!brands[p.brand])brands[p.brand]={d:0,t:0};brands[p.brand].t++;if(p.done)brands[p.brand].d++;});
+  document.getElementById('hrbar').innerHTML=Object.entries(brands).sort((a,b)=>b[1].t-a[1].t).map(([b,v])=>{
+    const dp=v.t?(v.d/v.t*100).toFixed(0):0;
+    return`<div class="brow"><div class="bbrnd">${b}</div><div class="btrk"><div class="bdone" style="width:${dp}%"></div><div class="btodo" style="width:${100-dp}%"></div></div><div class="bnums">${v.d}/${v.t}</div></div>`;
+  }).join('');
+  const bs=[...new Set(orgData.map(p=>p.brand))];
+  document.getElementById('fbrand').innerHTML='<option value="">Wszystkie działy</option>'+bs.map(b=>`<option>${b}</option>`).join('');
+  renderHR();
+}
+function renderHR(){
+  const fb=document.getElementById('fbrand').value,fs=document.getElementById('fstat').value;
+  let data=[...orgData];
+  if(fb)data=data.filter(p=>p.brand===fb);
+  if(fs==='done')data=data.filter(p=>p.done);
+  if(fs==='miss')data=data.filter(p=>!p.done);
+  data.sort((a,b)=>{
+    if(hrSort.k==='done')return a.done===b.done?0:a.done?-hrSort.d:hrSort.d;
+    return(a[hrSort.k]||'').localeCompare(b[hrSort.k]||'','pl')*hrSort.d;
+  });
+  document.getElementById('hrbody').innerHTML=data.map(p=>`<tr>
+    <td><span style="font-size:10px;background:var(--cream);padding:2px 7px;border-radius:9px;font-weight:500">${p.brand}</span></td>
+    <td>${p.name||'<span style="color:#bbb;font-style:italic">—</span>'}</td>
+    <td>${p.role}</td>
+    <td class="${p.done?'sdone':'smiss'}">${p.done?'✓ Gotowe':'✗ Brak'}</td>
+  </tr>`).join('');
+}
+function sortHR(k){if(hrSort.k===k)hrSort.d*=-1;else{hrSort.k=k;hrSort.d=1;}renderHR();}
+
+// ==================== UTILS ====================
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+
+setS(1);
+</script>
+</body>
+</html>
